@@ -417,7 +417,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 	if (arg2 == CMD_BECOME_MANAGER) {
 		if (from_manager) {
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-				pr_err("become_manager: prctl reply error\n");
+				pr_debug("become_manager: prctl reply error\n");
 			}
 			return 0;
 		}
@@ -429,7 +429,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 			pr_info("allow root for: %d\n", current_uid().val);
 			escape_to_root();
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-				pr_err("grant_root: prctl reply error\n");
+				pr_debug("grant_root: prctl reply error\n");
 			}
 		}
 		return 0;
@@ -439,7 +439,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 	if (arg2 == CMD_GET_VERSION) {
 		u32 version = KERNEL_SU_VERSION;
 		if (copy_to_user(arg3, &version, sizeof(version))) {
-			pr_err("prctl reply error, cmd: %lu\n", arg2);
+			pr_debug("prctl reply error, cmd: %lu\n", arg2);
 		}
 		u32 version_flags = 0;
 #ifdef MODULE
@@ -447,7 +447,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 #endif
 		if (arg4 &&
 		    copy_to_user(arg4, &version_flags, sizeof(version_flags))) {
-			pr_err("prctl reply error, cmd: %lu\n", arg2);
+			pr_debug("prctl reply error, cmd: %lu\n", arg2);
 		}
 		return 0;
 	}
@@ -456,7 +456,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
         const char *tag = KERNEL_SU_VERSION_TAG;
         size_t tag_len = strlen(tag) + 1;
         if (copy_to_user((void __user *)arg3, tag, tag_len)) {
-            pr_err("prctl reply error, cmd: %lu\n", arg2);
+            pr_debug("prctl reply error, cmd: %lu\n", arg2);
         }
         return 0;
     }
@@ -467,7 +467,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 			pr_err("get manager uid failed\n");
 		}
 		if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-			pr_err("prctl reply error, cmd: %lu\n", arg2);
+			pr_debug("prctl reply error, cmd: %lu\n", arg2);
 		}
 		return 0;
 	}
@@ -530,7 +530,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		}
 		if (!handle_sepolicy(arg3, arg4)) {
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-				pr_err("sepolicy: prctl reply error\n");
+				pr_debug("sepolicy: prctl reply error\n");
 			}
 		}
 
@@ -541,7 +541,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		if (ksu_is_safe_mode()) {
 			pr_warn("safemode enabled!\n");
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-				pr_err("safemode: prctl reply error\n");
+				pr_debug("safemode: prctl reply error\n");
 			}
 		}
 		return 0;
@@ -559,7 +559,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 					  sizeof(u32) * array_length)) {
 				if (copy_to_user(result, &reply_ok,
 						 sizeof(reply_ok))) {
-					pr_err("prctl reply error, cmd: %lu\n",
+					pr_debug("prctl reply error, cmd: %lu\n",
 					       arg2);
 				}
 			} else {
@@ -581,7 +581,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		}
 		if (!copy_to_user(arg4, &allow, sizeof(allow))) {
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-				pr_err("prctl reply error, cmd: %lu\n", arg2);
+				pr_debug("prctl reply error, cmd: %lu\n", arg2);
 			}
 		} else {
 			pr_err("prctl copy err, cmd: %lu\n", arg2);
@@ -595,7 +595,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		if (enabled == ksu_su_compat_enabled) {
 			pr_info("cmd enable su but no need to change.\n");
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {// return the reply_ok directly
-				pr_err("prctl reply error, cmd: %lu\n", arg2);
+				pr_debug("prctl reply error, cmd: %lu\n", arg2);
 			}
 			return 0;
 		}
@@ -608,7 +608,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		ksu_su_compat_enabled = enabled;
 
 		if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-			pr_err("prctl reply error, cmd: %lu\n", arg2);
+			pr_debug("prctl reply error, cmd: %lu\n", arg2);
 		}
 
 		return 0;
@@ -1003,7 +1003,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 				return 0;
 			}
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-				pr_err("prctl reply error, cmd: %lu\n", arg2);
+				pr_debug("prctl reply error, cmd: %lu\n", arg2);
 			}
 		}
 		return 0;
@@ -1019,7 +1019,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		// todo: validate the params
 		if (ksu_set_app_profile(&profile, true)) {
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-				pr_err("prctl reply error, cmd: %lu\n", arg2);
+				pr_debug("prctl reply error, cmd: %lu\n", arg2);
 			}
 		}
 		return 0;
@@ -1032,7 +1032,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 			return 0;
 		}
 		if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-			pr_err("prctl reply error, cmd: %lu\n", arg2);
+			pr_debug("prctl reply error, cmd: %lu\n", arg2);
 		}
 		return 0;
 	}
@@ -1042,7 +1042,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		if (enabled == ksu_su_compat_enabled) {
 			pr_info("cmd enable su but no need to change.\n");
 			if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {// return the reply_ok directly
-				pr_err("prctl reply error, cmd: %lu\n", arg2);
+				pr_debug("prctl reply error, cmd: %lu\n", arg2);
 			}
 			return 0;
 		}
@@ -1061,7 +1061,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		ksu_su_compat_enabled = enabled;
 
 		if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
-			pr_err("prctl reply error, cmd: %lu\n", arg2);
+			pr_debug("prctl reply error, cmd: %lu\n", arg2);
 		}
 
 		return 0;
