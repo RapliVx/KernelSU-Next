@@ -134,22 +134,12 @@ LSM_HANDLER_TYPE ksu_handle_setuid(struct cred *new, const struct cred *old)
 		ksu_install_fd(); // install fd for ksu manager
 	}
 
-#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
-	// Check if spawned process is normal user app and needs to be umounted
-    if (likely(is_zygote_normal_app_uid(new_uid) && ksu_uid_should_umount(new_uid))) {
-        goto do_umount;
-	}
-#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
-
 	if (unlikely(ksu_is_allow_uid_for_current(new_uid))) {
 		disable_seccomp();
 		return 0;
 	}
 
-#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 do_umount:
-#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
-
     // Handle kernel umount
 #ifndef CONFIG_KSU_SUSFS_TRY_UMOUNT
     return ksu_handle_umount(new, old);
