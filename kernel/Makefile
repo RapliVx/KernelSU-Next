@@ -12,7 +12,7 @@ $(info -- KDIR: $(KDIR))
 $(info -- MDIR: $(MDIR))
 
 # KSU VERSION
-KSU_VERSION := 33121
+KSU_VERSION := 33122
 KSU_VERSION_TAG := v3.1.0
 
 ccflags-y += -DKSU_VERSION=$(KSU_VERSION)
