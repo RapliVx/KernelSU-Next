@@ -129,7 +129,7 @@ static int apply_kernelsu_rules_fn(void *ptr)
 
 void apply_kernelsu_rules()
 {
-	struct policydb *db;
+	struct policydb *db = NULL;
 
 	if (!getenforce()) {
 		pr_info("SELinux permissive or disabled, apply rules!\n");
